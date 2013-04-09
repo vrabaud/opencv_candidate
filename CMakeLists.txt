@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 2.8)
 project(opencv_candidate)
 
+include(cmake/OpenCVUtils.cmake)
+include(cmake/OpenCVCompilerOptions.cmake)
+
 find_package(catkin REQUIRED)
 find_package(libg2o QUIET)
 find_package(OpenCV)
 find_library(DEPTH_SENSE_LIBRARIES DepthSense /opt/DepthSenseSDK/lib)
+
 
 if (${DEPTH_SENSE_LIBRARIES} STREQUAL DEPTH_SENSE_LIBRARIES-NOTFOUND)
   set(OPENCV_CREATIVE "")
@@ -23,6 +27,7 @@ catkin_package(CFG_EXTRAS depends.cmake
                LIBRARIES opencv_candidate
                          ${OPENCV_CREATIVE}
                          opencv_rgbd
+			 opencv_line_rgb
                          ${opencv_candidate_reconst3d}
 )
 else()
@@ -34,6 +39,7 @@ catkin_project(opencv_candidate
                LIBRARIES opencv_candidate
                          ${OPENCV_CREATIVE}
                          opencv_rgbd
+			 opencv_line_rgb
 )
 list(APPEND catkin_LIBRARIES ${libg2o_LIBRARIES})
 endif()
@@ -49,6 +55,7 @@ include_directories(include)
 # install the include directory
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/rgbd/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/line_rgb/include)
 
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/opencv_candidate
         DESTINATION include
@@ -56,3 +63,11 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/opencv_candidate
 )
 
 add_subdirectory(src)
+
+OCV_OPTION(ENABLE_SSE                 "Enable SSE instructions"                                  ON  )
+OCV_OPTION(ENABLE_SSE2                "Enable SSE2 instructions"                                 ON  )
+OCV_OPTION(ENABLE_SSE3                "Enable SSE3 instructions"                                 OFF )
+OCV_OPTION(ENABLE_SSSE3               "Enable SSSE3 instructions"                                ON )
+OCV_OPTION(ENABLE_SSE41               "Enable SSE4.1 instructions"                               OFF )
+OCV_OPTION(ENABLE_SSE42               "Enable SSE4.2 instructions"                               OFF )
+
