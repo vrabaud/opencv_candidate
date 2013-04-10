@@ -2,7 +2,20 @@ cmake_minimum_required(VERSION 2.8)
 project(opencv_candidate)
 
 include(cmake/OpenCVUtils.cmake)
+
+OCV_OPTION(ENABLE_SSE                 "Enable SSE instructions"                                  ON  )
+OCV_OPTION(ENABLE_SSE2                "Enable SSE2 instructions"                                 ON  )
+OCV_OPTION(ENABLE_SSE3                "Enable SSE3 instructions"                                 OFF )
+OCV_OPTION(ENABLE_SSSE3               "Enable SSSE3 instructions"                                ON )
+OCV_OPTION(ENABLE_SSE41               "Enable SSE4.1 instructions"                               OFF )
+OCV_OPTION(ENABLE_SSE42               "Enable SSE4.2 instructions"                               OFF )
+
 include(cmake/OpenCVCompilerOptions.cmake)
+
+# In case of Makefiles if the user does not setup CMAKE_BUILD_TYPE, assume it's Release:
+if(CMAKE_GENERATOR MATCHES "Makefiles|Ninja" AND "${CMAKE_BUILD_TYPE}" STREQUAL "")
+  set(CMAKE_BUILD_TYPE Release)
+endif()
 
 find_package(catkin REQUIRED)
 find_package(libg2o QUIET)
@@ -64,10 +77,11 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/opencv_candidate
 
 add_subdirectory(src)
 
-OCV_OPTION(ENABLE_SSE                 "Enable SSE instructions"                                  ON  )
-OCV_OPTION(ENABLE_SSE2                "Enable SSE2 instructions"                                 ON  )
-OCV_OPTION(ENABLE_SSE3                "Enable SSE3 instructions"                                 OFF )
-OCV_OPTION(ENABLE_SSSE3               "Enable SSSE3 instructions"                                ON )
-OCV_OPTION(ENABLE_SSE41               "Enable SSE4.1 instructions"                               OFF )
-OCV_OPTION(ENABLE_SSE42               "Enable SSE4.2 instructions"                               OFF )
 
+
+
+
+# In case of Makefiles if the user does not setup CMAKE_BUILD_TYPE, assume it's Release:
+if(CMAKE_GENERATOR MATCHES "Makefiles|Ninja" AND "${CMAKE_BUILD_TYPE}" STREQUAL "")
+  set(CMAKE_BUILD_TYPE Release)
+endif()
