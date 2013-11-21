@@ -64,7 +64,7 @@
  *   	      Stefano Fabri (s.fabri@email.it), Rome, Italy
  */
 
-#include "objdetect_line_rgb.hpp"
+#include <opencv2/line_rgb/line_rgb.hpp>
 #include <limits>
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/imgproc/imgproc_c.h"
@@ -1019,7 +1019,7 @@ void ColorGradient::write(FileStorage& fs) const {
  \****************************************************************************************/
 
 // Contains GRANULARITY and NORMAL_LUT
-#include "normal_lut.i"
+#include <opencv2/line_rgb/normal_lut.i>
 
 static void accumBilateral(long delta, long i, long j, long * A, long * b,
         int threshold) {
