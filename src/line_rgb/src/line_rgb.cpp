@@ -138,11 +138,11 @@ static inline int getLabel(int quantized) {
 
 void Feature::read(const FileNode& fn) {
     FileNodeIterator fni = fn.begin();
-    fni >> x >> y >> label >> rgb_label >> on_border;
+    fni >> x >> y >> label >> rgb_label;
 }
 
 void Feature::write(FileStorage& fs) const {
-    fs << "[:" << x << y << label << rgb_label << on_border << "]";
+    fs << "[:" << x << y << label << rgb_label << "]";
 }
 
 // struct Template
@@ -308,29 +308,6 @@ Ptr<Modality> Modality::create(const FileNode& fn) {
     return modality;
 }
 
-void colormap(const Mat& quantized, Mat& dst) {
-    std::vector < Vec3b > lut(8);
-    lut[0] = Vec3b(0, 0, 255);
-    lut[1] = Vec3b(0, 170, 255);
-    lut[2] = Vec3b(0, 255, 170);
-    lut[3] = Vec3b(0, 255, 0);
-    lut[4] = Vec3b(170, 255, 0);
-    lut[5] = Vec3b(255, 170, 0);
-    lut[6] = Vec3b(255, 0, 0);
-    lut[7] = Vec3b(255, 0, 170);
-
-    dst = Mat::zeros(quantized.size(), CV_8UC3);
-    for (int r = 0; r < dst.rows; ++r) {
-        const uchar* quant_r = quantized.ptr(r);
-        Vec3b* dst_r = dst.ptr < Vec3b > (r);
-        for (int c = 0; c < dst.cols; ++c) {
-            uchar q = quant_r[c];
-            if (q)
-                dst_r[c] = lut[getLabel(q)];
-        }
-    }
-}
-
 /****************************************************************************************\
 *                             Color gradient modality                                    *
  \****************************************************************************************/
@@ -339,22 +316,6 @@ void colormap(const Mat& quantized, Mat& dst) {
 void hysteresisGradient(Mat& magnitude, Mat& angle, Mat& ap_tmp,
         float w_threshold, float s_threshold, bool compute_magnitude_strong,
         Mat& magnitude_strong);
-
-int *bar(int *array) {
-    int *start = array;
-    while (*array) {
-        *array++ += 1;
-    }
-    return start;
-}
-
-void writeMat(Mat& m) {
-    string fileNameConf = "./matrice_stampata.txt";
-    FileStorage fsConf(fileNameConf, FileStorage::WRITE);
-    fsConf << "m" << m;
-
-    fsConf.release();
-}
 
 /** 
  * \brief returns if the values of 3 channels are similar to black or to white 
@@ -917,7 +878,7 @@ bool ColorGradientPyramid::extractTemplate(Template& templ) const {
 
                 if (pyramid_level == 1 && !border_mask_r[c]) {
                     candidates_color_features.push_back(
-                            Candidate(c, r, -1, getLabel(quantized_rgb), false,
+                            Candidate(c, r, -1, getLabel(quantized_rgb),
                                     -1));
                 }
 
@@ -933,12 +894,12 @@ bool ColorGradientPyramid::extractTemplate(Template& templ) const {
                                     rgb, magnitude, mask, central_mass);
                             candidates.push_back(
                                     Candidate(c, r, getLabel(quantized),
-                                            getLabel(voted), true, score));
+                                            getLabel(voted), score));
                             on_borderCount++;
                         } else
                             candidates.push_back(
                                     Candidate(c, r, getLabel(quantized),
-                                            getLabel(quantized_rgb), false,
+                                            getLabel(quantized_rgb),
                                             score));
 
                     }

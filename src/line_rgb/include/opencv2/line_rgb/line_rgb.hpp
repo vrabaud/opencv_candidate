@@ -98,11 +98,10 @@ struct CV_EXPORTS Feature
     int y;///< y offset
     int label;///< Quantization
     int rgb_label;///<Quantization of the rgb value
-    bool on_border;/// is the feature on the contour of the image?
 
     Feature() : x(0), y(0), label(0) {}
     Feature(int x, int y, int label) : x(x), y(y), label(label) {}
-    Feature(int x, int y, int label, int rgb_label, bool on_border) : x(x), y(y), label(label), rgb_label(rgb_label), on_border(on_border) {}
+    Feature(int x, int y, int label, int rgb_label) : x(x), y(y), label(label), rgb_label(rgb_label) {}
 
     void read(const FileNode& fn);
     void write(FileStorage& fs) const;
@@ -169,9 +168,9 @@ protected:
                 f(x, y, label), score(score) {
         }
 
-        Candidate(int x, int y, int label, int rgb_label, bool on_border,
+        Candidate(int x, int y, int label, int rgb_label,
                 float score) :
-                f(x, y, label, rgb_label, on_border), score(score) {
+                f(x, y, label, rgb_label), score(score) {
         }
 
         /// Sort candidates with high score to the front
@@ -320,10 +319,6 @@ protected:
     virtual Ptr<QuantizedPyramid> processImpl(const Mat& src,
             const Mat& mask) const;
 };
-
-/**
- * \brief Debug function to colormap a quantized image for viewing.
- */void colormap(const Mat& quantized, Mat& dst);
 
 /**
  * \brief Represents a successful template match.
