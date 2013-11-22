@@ -385,7 +385,7 @@ public:
      * \param T_pyramid        Value of the sampling step T at each pyramid level. The
      *                         number of pyramid levels is T_pyramid.size().
      */
-    Detector(const std::vector< Ptr<Modality> >& modalities, const std::vector<int>& T_pyramid, const bool color_features_enabled = true);
+    Detector(const std::vector< Ptr<Modality> >& modalities, const std::vector<int>& T_pyramid);
 
     /**
      * \brief Detect objects by template matching.
@@ -471,7 +471,6 @@ protected:
     std::vector< Ptr<Modality> > modalities;
     int pyramid_levels;
     std::vector<int> T_at_level;
-    bool color_features_enabled;
 
     typedef std::vector<Template> TemplatePyramid;
     typedef std::map<std::string, std::vector<TemplatePyramid> > TemplatesMap;
@@ -496,8 +495,7 @@ protected:
  *
  * Default parameter settings suitable for VGA images.
  */
-CV_EXPORTS Ptr<Detector> getDefaultLINERGB(const bool color_features_enabled =
-        true);
+CV_EXPORTS Ptr<Detector> getDefaultLINERGB();
 
 /**
  * \brief Factory function for detector using LINE-MOD algorithm with color gradients
@@ -505,8 +503,7 @@ CV_EXPORTS Ptr<Detector> getDefaultLINERGB(const bool color_features_enabled =
  *
  * Default parameter settings suitable for VGA images.
  */
-CV_EXPORTS Ptr<Detector> getDefaultLINEMODRGB(
-        const bool color_features_enabled = true);
+CV_EXPORTS Ptr<Detector> getDefaultLINEMODRGB();
 
 } // namespace linemod
 } // namespace cv
